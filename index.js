@@ -40,6 +40,12 @@ const data = (fs.readFileSync = fs.readFileSync(
 
 const dataObj = JSON.parse(data);
 
+const searchRegion = function (region, data) {
+  if (region == data.region) {
+    const output = tempOverview.replace(`{%COUNTRY_CARDS%}`, cardsHtml);
+  }
+};
+
 const server = http.createServer((req, res) => {
   const { query, pathname } = url.parse(req.url, true);
 
