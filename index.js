@@ -51,7 +51,6 @@ const server = http.createServer((req, res) => {
     const cardsHtml = dataObj
       .map((el) => replaceTemplate(tempCard, el))
       .join("");
-    console.log(cardsHtml);
 
     const output = tempOverview.replace(`{%COUNTRY_CARDS%}`, cardsHtml);
 
