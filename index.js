@@ -38,7 +38,6 @@ const data = (fs.readFileSync = fs.readFileSync(
   "utf-8"
 ));
 
-//array of 5 objects parsed from a string of data
 const dataObj = JSON.parse(data);
 
 const server = http.createServer((req, res) => {
@@ -61,12 +60,6 @@ const server = http.createServer((req, res) => {
     //Country page
   } else if (pathname === "/country") {
     res.end("This is a country");
-
-    //API
-  } else if (pathname === "/api") {
-    res.writeHead(200, { "Content-type": "application/json" });
-
-    res.end(data);
   } else {
     res.writeHead(404, {
       "Content-type": "text/html",
