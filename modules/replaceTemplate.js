@@ -10,7 +10,5 @@ module.exports = (temp, country) => {
   output = output.replaceAll(/{%CAPITAL%}/g, country.capital);
   output = output.replaceAll(/{%FLAG%}/g, country.flags.png);
 
-  //   if (!product.organic)
-  //     output = output.replaceAll(/{%NOT_ORGANIC%}/g, "not-organic");
-  //   return output;
+  return output;
 };
