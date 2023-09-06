@@ -1,9 +1,10 @@
 //fs = file system.acces to functions for reading and writing date to the file system
 const fs = require("fs");
-const http = require("http");
-const url = require("url");
 const replaceTemplate = require("./modules/replaceTemplate");
 const express = require("express");
+const bodyParser = require("body-parser");
+const fetchCountry = require("./script");
+
 const app = express();
 const port = 3000;
 
@@ -37,12 +38,9 @@ app.use(express.static(__dirname));
 
 //Overview page
 app.get("/", (req, res) => {
-  // You existing code for handling the '/' route
   //loop through the array and replace the template placeholders with the actual data from the current product
   const cardsHtml = dataObj.map((el) => replaceTemplate(tempCard, el)).join("");
-
   const output = tempOverview.replace(`{%COUNTRY_CARDS%}`, cardsHtml);
-
   // Modified: Use res.send instead of res.end
   res.send(output);
 });
@@ -51,6 +49,8 @@ app.get("/", (req, res) => {
 app.get("/country", (req, res) => {
   res.send("This is a country"); // Modified: Use res.send instead of res.end
 });
+
+app.get("/data/data.json", fetchCountry); // Using the fetchCountry middleware to handle requests to /data/data.json
 
 // Added: Start the server
 app.listen(port, () => {
