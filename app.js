@@ -8,6 +8,9 @@ const fetchCountry = require("./script");
 const app = express();
 const port = 3000;
 
+//middleware
+app.use(express.json());
+
 /////////////
 // SERVER
 
@@ -25,29 +28,61 @@ const tempCountry = fs.readFileSync(
   "utf-8"
 );
 
-const data = (fs.readFileSync = fs.readFileSync(
-  `${__dirname}/data/data.json`,
-  "utf-8"
-));
+const countries = fs.readFileSync(`${__dirname}/data/data.json`, "utf-8");
 
 // Turn string into object
-const dataObj = JSON.parse(data);
+const dataObj = JSON.parse(countries);
 
 // Modified: Serve static files from the root directory
 app.use(express.static(__dirname));
 
 //Overview page
-app.get("/", (req, res) => {
+app.get("/api/v1/countries", (req, res) => {
   //loop through the array and replace the template placeholders with the actual data from the current product
-  const cardsHtml = dataObj.map((el) => replaceTemplate(tempCard, el)).join("");
-  const output = tempOverview.replace(`{%COUNTRY_CARDS%}`, cardsHtml);
+  // const cardsHtml = dataObj.map((el) => replaceTemplate(tempCard, el)).join("");
+  // const output = tempOverview.replace(`{%COUNTRY_CARDS%}`, cardsHtml);
+
+  res.status(200).json({
+    status: "success",
+    results: countries.length,
+    countries: {
+      countries,
+    },
+  });
   // Modified: Use res.send instead of res.end
-  res.send(output);
+  res.send(res.send);
 });
 
 // Country page
-app.get("/country", (req, res) => {
-  res.send("This is a country"); // Modified: Use res.send instead of res.end
+app.post("/api/v1/countries/", (req, res) => {
+  console.log(req.body);
+
+  // create an id
+  const newId = countries[countries.length - 1].id + 1;
+  //merge id with a to body object
+  const newCountry = Object.assign({ id: newId }, req.body);
+
+  // Push new country into countries array
+  countries.push(newCountry);
+
+  // Persist into the file
+  fs.writeFile(
+    `${__dirname}/data/data.json`,
+    "utf-8",
+    JSON.stringify(countries),
+    (err) => {
+      res.status(201).json({
+        status: "success",
+        data: {
+          countries: newCountry,
+        },
+      });
+    }
+  );
+
+  // const cardsHtml = dataObj.map((el) => replaceTemplate(tempCard, el)).join("");
+  // const output = tempCountry.replace(`{%COUNTRY_CARDS%}`, cardsHtml);
+  // res.send(output); // Modified: Use res.send instead of res.end
 });
 
 app.get("/data/data.json", fetchCountry); // Using the fetchCountry middleware to handle requests to /data/data.json

@@ -3,8 +3,8 @@
 // Move the server-side code from the combined code you provided into the server.js file. This code will handle the server-side functionality, such as reading the data file and sending the filtered country list.
 //In the server-side code, update the endpoint to receive the region from the request query string and send the filtered country list as the response.
 
-const express = require("express");
 const fs = require("fs");
+const express = require("express");
 
 const app = express();
 const port = 3000;
